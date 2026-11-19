@@ -1,0 +1,30 @@
+name: MacRunara smoke test
+
+# Manual only: this job runs on a paid macOS runner.
+# Do not add push/pull_request triggers unless you intend to incur usage charges.
+on:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    name: Verify MacRunara macOS runner
+    runs-on: [macos, arm64, macrunara]
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show runner identity
+        run: |
+          echo "=== macOS version ==="
+          sw_vers
+          echo "=== architecture ==="
+          uname -a
+          echo "=== Xcode toolchain (if present) ==="
+          xcodebuild -version || echo "xcodebuild not installed on this runner"
+          echo "=== runner labels ==="
+          echo "runs-on: macos, arm64, macrunara"
+
+      - name: Done
+        run: echo "MacRunara runner smoke test completed successfully."
